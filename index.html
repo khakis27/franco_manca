@@ -146,6 +146,23 @@
         box-sizing: border-box;
       }
 
+      .choice-non-clickable-2 {
+        background-color: grey;
+        height: calc(100vh / 3);
+        color: black;
+        padding: 20px;
+        border: 2px solid black;
+        cursor: not-allowed;
+        opacity: 0.6;
+        pointer-events: none;
+        box-sizing: border-box;
+        display: block;
+        text-align: left;
+        transition: background-color 1s, color 1s;
+        flex: 1 1 calc(50% - 10px); /* 50% della larghezza meno lo spazio tra gli elementi */
+        box-sizing: border-box;
+      }
+
 
       .choice-4 {
         background-color: white;
@@ -322,7 +339,7 @@
        continue: [{ text: "Continue", next: "20" }],
      },
      20: {
-       text: "You are 9 y.o. While you’re playing with another child in the garden of your mansion, you fall and skin your knee.",
+       text: "You are 9. While you’re playing with another child in the garden of your mansion, you fall and skin your knee.",
       video: "assets/20.mp4",
        continue: [{ text: "Continue", next: "21" }],
      },
@@ -349,8 +366,8 @@
      24: {
        text: "Your parents decide to gift you a big surgery bundle, that will bring you to a 85% score, but you don’t know wether to accept or not.",
        choices: [
-         { text: "<strong>Choice 1</strong><br><br> You decide to accept the surgeries imposed by your parents.", next: "26", class: "choice-2" },
-         { text: "<strong>Choice 2</strong><br><br> You refuse all surgeries and try to run away from home.", next: "25", class: "choice-2" }]
+         { text: "<strong>Choice 1</strong><br> You decide to accept the surgeries imposed by your parents.", next: "26", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br> You refuse all surgeries and try to run away from home.", next: "25", class: "choice-2" }]
      },
      //scelta 1
      26: {
@@ -583,7 +600,7 @@
      },
 
      36: {
-       text: "You meet a really pretty girl down the street. Hunted by the sense of guilt you return home.",
+       text: "You meet a very pretty girl on the street. Convinced that you can't waste your beauty, you become overwhelmed with guilt and go home.",
        video: "assets/36.png",
        continue: [{ text: "Continue", next: "39" }],
      },
@@ -604,7 +621,7 @@
      },
 
      40: {
-       title: "As a gift for coming home, you have 3 surgeries supplied:eyes occidentalisation, ribs removal, lower limb lenghtening",
+       title: "As a gift for coming home, you have 3 surgeries supplied: eyes occidentalisation, ribs removal, lower limb lenghtening",
        continue: [{ text: "Continue", next: "47" }],
        beauty:"87.4%"
      },
@@ -636,10 +653,24 @@
        video: "assets/50.mp4",
        continue: [{ text: "Continue", next: "52" }],
      },
+
+     5050: {
+       text: "The judges are captivated by your beauty. Despite this, you are a few grams above the ideal weight for the major role. ",
+       video: "assets/50.mp4",
+       continue: [{ text: "Continue", next: "5252" }],
+     },
+     
      52: {
        text: "What do you want to do?",
        choices: [
          { text: "You put yourself on a diet before second audition", next: "53", class: "choice-2" },
+         { text: "Nevertheless you show up at the second audition", next: "5555", class: "choice-2" }]
+     },
+
+     5252: {
+       text: "What do you want to do?",
+       choices: [
+         { text: "You put yourself on a diet before second audition", next: "5353", class: "choice-2" },
          { text: "Nevertheless you show up at the second audition", next: "55", class: "choice-2" }]
      },
 
@@ -650,8 +681,15 @@
        video: "assets/53.mp4",
        continue: [{ text: "Continue", next: "54" }],
      },
+
+     5353: {
+       text: "You managed to reach your ideal weight, you are the protagonist of the play.",
+       video: "assets/53.mp4",
+       continue: [{ text: "Continue", next: "54" }],
+     },
+
      54: {
-       text: "As you sign the contract you notice a girl in tears. Being the lead was her dream and she had studied so hard for the role, but her beauty percentage wasn’t high enough.",
+       text: "As you sign the contract you notice a girl in tears.\n Being the lead was her dream and she had studied so hard for the role, but her beauty percentage wasn’t high enough.",
        video: "assets/54.mp4",
        continue: [{ text: "Continue", next: "59" }],
      },
@@ -666,9 +704,15 @@
      },
      //Nevertheless you show up
      55: {
-       title: "The judges don’t think it’s your time to shine yet. You try again and audtion for the minor role",
+       title: "The judges don’t think it’s your time to shine yet. You try again and audition for the minor role.",
+       continue: [{ text: "Continue", next: "565656" }],
+     },
+
+     5555: {
+       title: "The judges don’t think it’s your time to shine yet. You try again and audition for the minor role.",
        continue: [{ text: "Continue", next: "5151" }],
      },
+
      51: {
        text: "Congratulations! Your audition was a success and you were immediately taken. Although you forgot your lines, the role was given to you right away.",
        video: "assets/51.mp4",
@@ -685,15 +729,20 @@
      5656: {
        text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
        choices: [
-         { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-2" },
-         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-non-clickable" }]
+         { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-4" },]
      },
 
      56: {
        text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
        choices: [
          { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-2" },
-         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-non" }]
+         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "5050", class: "choice-2" }]
+     },
+
+     565656: {
+       text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
+       choices: [
+         { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-4" },]
      },
      
      544: {
@@ -828,11 +877,11 @@
        text: "The surgeons are congratulating you but it has been a long day, and you feel tired. What do you want to do now?",
        choices: [
          { text: "<strong>Choice 1</strong><br> You return to the dressing room. You need rest.", next: "64", class: "choice-2" },
-         { text: "<strong>Choice 2</strong><br>Join the crowd, bask in their adoration, and show them true beauty.", next: "65", class: "choice-2" }]
+         { text: "<strong>Choice 2</strong><br>Join the crowd, bask in their adoration, and show them true beauty.", next: "655", class: "choice-2" }]
      },
      //choice1
      64: {
-       text: "Doctor Erik is waiting for you in the dressing room. He tells you that your schedule is too dense and you have no time to rest.He tells you that if you are too exhausted he can give you drugs. ",
+       text: "Doctor Erik is waiting for you in the dressing room. He tells you that your schedule is too dense and you have no time to rest. He tells you that if you are too exhausted he can give you drugs. ",
        choices: [
          { text: "Accept", next: "65", class: "choice-2" },
          { text: "Decline", next: "66", class: "choice-2" }]
@@ -842,14 +891,14 @@
        text: "Since you look a little bit too hyped up, he offers you a glass of whiskey.",
        choices: [
          { text: "Accept", next: "67", class: "choice-2" },
-         { text: "Decline", next: "69", class: "choice-2" }]
+         { text: "Decline", next: "6969", class: "choice-2" }]
      },
      //decline
      66: {
        text: "Dr. Erik sniffs a line of coke, and tells you that you can’t go out to the public like that anyways: you have dark circles under your eyes so he offers you a small botox injection.",
        choices: [
          { text: "Accept", next: "67", class: "choice-2" },
-         { text: "Decline", next: "67", class: "choice-2" }]
+         { text: "Decline", next: "69", class: "choice-2" }]
      },
 
 
@@ -860,14 +909,14 @@
 
 
      70: {
-       text: "While brushing your hair you see through the mirror a dark figure looking at you from outside\n the window. Startled, you turn around: it's Pyros.",
+       text: "While brushing your hair you see through the mirror a dark figure looking at you from outside the window. Startled, you turn around: it's Pyros.",
        video: "assets/70.mp4",
        continue: [{ text: "Continue", next: "71" }],
      },
 
 
      71: {
-       text: "Dr Erik warned you in the past about him.Once a surgeon, Pyros is now the leader of a reactionary movement against beauty system you stand for.",
+       text: "Dr Erik warned you in the past about him. Once a surgeon, Pyros is now the leader of a reactionary movement against beauty system you stand for.",
        video: "assets/76.mp4",
        continue: [{ text: "Continue", next: "72" }],
      },
@@ -883,16 +932,18 @@
        text: "You break your wrist and get superficially wounded on the legs. The security of the mansion quickly runs to you while Pyros escapes through the broken window.",
        video: "assets/73.mp4",
        continue: [{ text: "Continue", next: "75" }],
+       beauty:"83.4%",
      },
      74: {
        text: "Pyros cuts your face several times to ruin the most famous symbol of beauty.",
        video: "assets/74.mp4",
        continue: [{ text: "Continue", next: "75" }],
+       beauty:"83.4%"
      },
      75: {
        title: "Fortunately, the injuries sustained are treatable by Dr. Erik's eugenic practices. what is not curable is YOUR mental state, which leads you to distrust everybody.You feel lonelier than ever and you lean even more on dr erik’s presence and treatments. ",
        continue: [{ text: "Continue", next: "82" }],
-       beauty:"95.6%"
+       beauty:"83%"
      },
 
 
@@ -900,11 +951,16 @@
        title: "He forces you to: you can’t disrespect him like that. ",
        continue: [{ text: "Continue", next: "67" }],
      },
+
+     6969: {
+       title: "He forces you to: you can’t disrespect him like that. ",
+       continue: [{ text: "Continue", next: "67" }],
+     },
      //choice2
      655: {
        text: "While walking through the adoring mass, you see a dark figure approaching. Startled, you step back: it's Pyros. Dr Erik warned you about him.",
-      video: "assets/65.mp4",
-       continue: [{ text: "Continue", next: "67" }],
+      video: "assets/655.mp4",
+       continue: [{ text: "Continue", next: "76" }],
      },
      67: {
        text: "After all your duties, exhausted, you return to your villa. You take a glass of wine and you have a bath while listening to jazz music on vinyl. ",
@@ -960,6 +1016,7 @@
      82: {
        title: "You understand that you are incapable of feeling anything. the only goal of your life is to pursue \n an ephemeral beauty, not for yourself, but for\n a society that expects this from you.",
        continue: [{ text: "Continue", next: "83" }],
+       beauty:"95.6%"
      },
 
 
@@ -972,8 +1029,8 @@
      84: {
        text: "You go to Dr. Erik: you are ready for anything.",
        choices: [
-         { text: "Choice 1 <br>The key to ultimate beauty is your face: ask him for facial surgery.", next: "85", class: "choice-2" },
-         { text: "Choice 2 <br>The key to ultimate beauty is height <br> ask him for femur elongation", next: "85", class: "choice-2" }]
+         { text: "<strong>Choice 1</strong> <br>The key to ultimate beauty is your face: ask him for facial surgery.", next: "85", class: "choice-2" },
+         { text: "<strong>Choice 2</strong> <br>The key to ultimate beauty is height <br> ask him for femur elongation", next: "85", class: "choice-2" }]
      },
 
 
@@ -1027,7 +1084,7 @@
 
 
      93: {
-       text: "Dr Erik wants to preserve his most successful experiment so, without your consent, he puts you\n to sleep forever and embalms your beauty.",
+       text: "Dr Erik wants to preserve his most successful experiment so, without your consent, he puts you to sleep forever and embalms your beauty.",
        video: "assets/93.mp4",
        continue: [{ text: "Continue", next: "94" }],
        beauty:"99.8%"
@@ -1036,7 +1093,7 @@
 
      94: {
        text: "You are now just a votive statue to be venerated, sacred symbol of the very idea of beauty.",
-       video: "94.mp4",
+       video: "assets/94.mp4",
        continue: [{ text: "Continue", next: "95" }],
      },
 
