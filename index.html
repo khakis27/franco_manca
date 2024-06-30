@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gioco Testuale</title>
+    <style>
+      * {
+        font-family: "CustomFont", sans-serif;
+        box-sizing: border-box;
+        font-size: 20px;
+      }
+
+
+      @font-face {
+        font-family: "CustomFont";
+        src: url("assets/Suisse Int'l Mono/Suisse Int'l Mono Regular.otf")
+          format("opentype");
+      }
+
+
+      body {
+        background-image: url(bg.gif);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+      }
+
+
+      .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+
+      .fade-in.active {
+        opacity: 1;
+      }
+
+
+      .game-container {
+        padding: 20px;
+        max-width: calc(100vw / 2);
+        margin: 0 auto;
+        color: black;
+      }
+
+
+      .story-title {
+        text-transform: uppercase;
+        height: calc(100vh / 3 + 20px);
+        margin-top: calc(100vh / 3);
+        display: block;
+        text-align: left;
+      }
+
+
+      .story-text {
+        width: 100%;
+        height: calc(100vh / 6);
+        margin-top: calc(100vh / 6);
+        display: block;
+      }
+
+
+      .story-image {
+        width: 100%;
+        height: calc(100vh / 3);
+        display: block;
+        margin: 0 auto;
+        border: 0px solid black;
+        box-sizing: border-box;
+       object-fit: cover; /* Coprire completamente l'area con il video */
+      }
+
+
+      .story-image-gif {
+        width: 100%;
+        height: 100vh; /* Impostare l'altezza al 100% della viewport */
+        position: fixed; /* Posizionare l'elemento in modo fisso rispetto alla viewport */
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        z-index: 1; /* Assicurarsi che l'elemento sia sopra tutti gli altri contenuti */
+        object-fit: cover; /* Coprire completamente l'area con l'immagine */
+        background-position: center; /* Centrare l'immagine */
+      }
+
+
+      .choice-container {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+
+      .choice {
+        background-color: white;
+        width: 20px;
+        color: black;
+        padding: 10px;
+        border: 2px solid black;
+        cursor: pointer;
+        display: block;
+        flex: 1 1 calc(25% - 10px);
+        box-sizing: border-box;
+        transition: background-color 1s, color 1s;
+        text-align: center;
+      }
+
+
+      .choice:hover {
+        background-color: black;
+        color: white;
+      }
+
+
+      .choice-3 {
+        width: 100%;
+        height: calc(100vh / 3);
+        display: block;
+        margin: 0 auto;
+        border: 2px solid black;
+        box-sizing: border-box;
+        flex: 1 1 calc(25% - 10px);
+      }
+
+
+      .choice-2 {
+        background-color: white;
+        height: calc(100vh / 3);
+        color: black;
+        padding: 10px;
+        border: 2px solid black;
+        cursor: pointer;
+        display: block;
+        text-align: left;
+        transition: background-color 1s, color 1s;
+        flex: 1 1 calc(50% - 10px); /* 50% della larghezza meno lo spazio tra gli elementi */
+        box-sizing: border-box;
+      }
+
+
+      .choice-4 {
+        background-color: white;
+        height: calc(100vh / 6 - 5px);
+        color: black;
+        padding: 10px;
+        border: 2px solid black;
+        cursor: pointer;
+        display: block;
+        text-align: center;
+        transition: background-color 1s, color 1s;
+        flex: 1 1 calc(50% - 10px); /* 50% della larghezza meno lo spazio tra gli elementi */
+        box-sizing: border-box;
+      }
+
+
+      .choice-non-clickable {
+        width: 100%;
+        height: calc(100vh / 3);
+        display: block;
+        margin: 0 auto;
+        border: 2px solid black;
+        background-color: grey;
+        color: white;
+        cursor: not-allowed;
+        opacity: 0.6;
+        pointer-events: none;
+        box-sizing: border-box;
+        flex: 1 1 calc(25% - 10px);
+      }
+
+
+      .continueButton-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end; /* Allinea gli elementi alla destra */
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+
+      .continueButton {
+        background-color: white;
+        width: 25%;
+        color: black;
+        padding: 10px;
+        border: 2px solid black;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition: background-color 1s, color 1s;
+        text-align: center;
+      }
+
+
+      .continueButton-container :hover {
+        background-color: black;
+        color: white;
+      }
+    </style>
+  </head>
+
+
+  <audio id="backgroundAudio" autoplay loop>
+    <source src="assets/Soundtrack.mp3" type="audio/mpeg">
+  </audio>
+
+
+  <body>
+    <div class="game-container">
+      <div id="story"></div>
+
+
+      <div class="choice-container" id="choice-container"></div>
+      <div class="continueButton-container" id="continueButton-container"></div>
+      <button id="backButton" style="display: none">Back</button>
+    </div>
+
+
+    <script>
+      const storyElement = document.getElementById("story");
+      const choicesElement = document.getElementById("choice-container");
+      const buttonElement = document.getElementById("continueButton-container");
+      const backButton = document.getElementById("backButton");
+    let backgroundAudio;
+
+
+
+      const gameData = {
+       start: {
+         title:
+           "Quest for PP00 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\ Aesthetic Cleansing",
+         continue: [{ text: "Start", next: "1" }],
+       },
+       //background story
+
+
+ 1: {
+       title: "Trigger warning\nThe experience addresses sensitive topics and discrimination.\nFEEL FREE TO LEAVE AT ANY TIME.\n USE the continue button TO proceed.",
+       continue: [{ text: "Continue", next: "2",class: "choice" }],
+     },
+     2: {
+       title: "During the experience you’ll have to make choices, this will affect the course of the story.",
+       continue: [{ text: "Continue", next: "3" }],
+     },
+     3: {
+       title: "WHILE WE ASSIGN YOU A CHARACTER, YOU’LL BE INTRODUCED TO OUR WORLD.",
+       continue: [{ text: "Continue", next: "4" }],
+     },
+     4: {
+       title: "Enter into a \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 different reality",
+       continue: [{ text: "Continue", next: "5" }],
+     },
+     5: {
+       title: 'In ancient greece, the concept of Kalokagathia,\n that linked moral values to beauty, LED SOCIETY TO marginaliZE the "ugly" in pursuit of societal perfection.',
+       continue: [{ text: "Continue", next: "6" }],
+     },
+     6: {
+       title: "However, this led to the evolution of a society obsessed BY PERFECT BEAUTY, where moral goodness Is overshadowed by AESTHETIC standards.",
+       continue: [{ text: "Continue", next: "7" }],
+     },
+     7: {
+       title: "The only value society holds is beauty and This obsession with appearance leads to rampant individualism, causing emotional detachment and superficial interactions. ",
+       continue: [{ text: "Continue", next: "8" }],
+     },
+     8: {
+       title: 'Empathy declines',
+       continue: [{ text: "Continue", next: "9" }],
+     },
+     9: {
+       gif: "assets/gif/Value system.mp4",
+       continue: [{ text: "Continue", next: "10" }],
+     },
+     10: {
+       title: "Every aspect of the body undergoes meticulous scrutiny and is evaluated based on strict aesthetic parameters.Continuous evaluation by others determines an individual's overall beauty score, which impacts their social status.",
+       continue: [{ text: "Continue", next: "11" }],
+     },
+     11: {
+       gif: "assets/gif/Donna.mp4",
+       continue: [{ text: "Continue", next: "12" }],
+     },
+     12: {
+       title: "Scientific research focuses exclusively on eugenics and plastic surgery, which has reached extreme levels. Every caste has its own surgeons.",
+       continue: [{ text: "Continue", next: "13" }],
+     },
+     13: {
+       title: "THE SOCIETY IS ORGANIZED IN 4 CASTES.\n beauty is power and it defines the upper class.",
+       continue: [{ text: "Continue", next: "14" }],
+     },
+     14: {
+      gif: "assets/gif/Caste.mp4",
+       continue: [{ text: "Continue", next: "15" }],
+     },
+     15: {
+       title: "WE HAVE FINALLY ASSIGNED YOU A CHARACTEr.",
+       continue: [{ text: "Continue", next: "16" }],
+     },
+     16: {
+       title: "You are \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Selene",
+       continue: [{ text: "Continue", next: "17" }],
+     },      17: {
+       text: "You were born into the highest caste of society.\n Your parents are extremely successful actors,\n at the top of the entertainment world.",
+      video: "assets/17.mp4",
+       continue: [{ text: "Continue", next: "18" }],
+       beauty:"85%"
+     },
+     18: {
+       text: "Eros Dietrich and Era Astaire are aesthetes, driven by their pursuit of beauty, jected you to your first surgery just five hours after your birth.",
+      video: "assets/18.mp4",
+       continue: [{ text: "Continue", next: "19" }],
+     },
+     19: {
+       text: "Their obsession made you go thought endless surgeries.\n Dr. Erik is the guardian of your appearance since your birth.",
+      video: "assets/19.mp4",
+       continue: [{ text: "Continue", next: "20" }],
+     },
+     20: {
+       text: "You are 9 y.o. While you’re playing with another child in the garden of your mansion, you fall and skin your knee.",
+      video: "assets/20.mp4",
+       continue: [{ text: "Continue", next: "21" }],
+     },
+     21: {
+       text: "You parents run to you terrified, and noticing the small wound immediately take you to Dr. Erik fearing that your percentage could be affected.",
+      video: "assets/21.mp4",
+       continue: [{ text: "Continue", next: "22" }],
+     },
+     22: {
+       title: "You are shocked by your parent’s exaggerated reaction and YOU REALISE that YOUR growth is artificial, and obsessively controlled.",
+       continue: [{ text: "Continue", next: "23" }],
+     },
+    
+     //checkpoint1
+
+
+     23: {
+       text: "A few days passed by. It’s now your 10th birthday.",
+       video: "assets/23.mp4",//modificare immagine
+       continue: [{ text: "Continue", next: "24" }],
+     },
+
+
+     24: {
+       text: "Your parents decide to gift you a big surgery bundle, that will bring you to a 85% score, but you don’t know wether to accept or not.",
+       choices: [
+         { text: "<strong>Choice 1</strong><br> You decide to accept the surgeries imposed by your parents.", next: "26", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br> You refuse all surgeries and try to run away from home.", next: "25", class: "choice-2" }]
+     },
+     //scelta 1
+     26: {
+       text: "You have one surgery for each part of your body. Choose from which part do you want to start.",
+       choices: [
+         { text: "Face", next: "27", class: "choice-3" },
+         { text: "Torso", next: "28", class: "choice-3" },
+         { text: "Lower limb", next: "29", class: "choice-3" }]
+     },
+
+
+     27: {
+       text: "Face:",
+       choices: [
+         { text: "Nose Job", next: "30", class: "choice-4" },
+         { text: "Face lift", next: "30", class: "choice-4" },
+         { text: "Eyes occidentalisation", next: "30", class: "choice-4" },
+         { text: "Buccal fat removal", next: "30", class: "choice-4" },
+       ]
+     },
+
+
+     28: {
+       text: "Torso:",
+       choices: [
+         { text: "Gastrectomy", next: "31", class: "choice-4" },
+         { text: "Ribs removal", next: "31", class: "choice-4" },
+         { text: "Breast augmentation", next: "31", class: "choice-4" },
+         { text: "Vertebroplasty", next: "31", class: "choice-4" },
+       ]
+     },
+
+
+     29: {
+       text: "Lower limb:",
+       choices: [
+         { text: "Gluteoplasty", next: "32", class: "choice-4" },
+         { text: "Histerectomy", next: "32", class: "choice-4" },
+         { text: "Ankle liposution", next: "32", class: "choice-4" },
+         { text: "Limb lenghtening", next: "32", class: "choice-4" },
+       ]
+     },
+     //Face
+     30: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", class: "choice-non-clickable" },
+         { text: "Torso", next: "112", class: "choice-3" },
+         { text: "Lower limb", next: "113", class: "choice-3" }]
+     },
+     31: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", next: "111", class: "choice-3" },
+         { text: "Torso", class: "choice-non-clickable" },
+         { text: "Lower limb", next: "116", class: "choice-3" }]
+     },
+
+
+     32: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", next: "114", class: "choice-3" },
+         { text: "Torso", next: "115", class: "choice-3" },
+         { text: "Lower limb", class: "choice-non-clickable" }]
+     },
+
+
+     33: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", class: "choice-non-clickable" },
+         { text: "Torso", next: "118", class: "choice-3" },
+         { text: "Lower limb", class: "choice-non-clickable" }]
+     },
+
+
+     34: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", next: "117", class: "choice-3" },
+         { text: "Torso", class: "choice-non-clickable" },
+         { text: "Lower limb", class: "choice-non-clickable" }]
+     },
+     35: {
+       text: "You need to operate every part.",
+       choices: [
+         { text: "Face", class: "choice-non-clickable" },
+         { text: "Torso", class: "choice-non-clickable" },
+         { text: "Lower limb", next: "119", class: "choice-3" }]
+     },
+
+
+
+
+     113: {
+       text: "Torso:",
+       choices: [
+         { text: "Gastrectomy", next: "33", class: "choice-4" },
+         { text: "Ribs removal", next: "33", class: "choice-4" },
+         { text: "Breast augmentation", next: "33", class: "choice-4" },
+         { text: "Vertebroplasty", next: "33", class: "choice-4" },
+       ]
+     },
+
+
+     112: {
+       text: "Lower limb:",
+       choices: [
+         { text: "Gluteoplasty", next: "35", class: "choice-4" },
+         { text: "Histerectomy", next: "35", class: "choice-4" },
+         { text: "Ankle liposution", next: "35", class: "choice-4" },
+         { text: "Limb lenghtening", next: "35", class: "choice-4" },
+       ]
+     },
+
+
+     111: {
+       text: "Face:",
+       choices: [
+         { text: "Nose Job", next: "35", class: "choice-4" },
+         { text: "Face lift", next: "35", class: "choice-4" },
+         { text: "Eyes occidentalisation", next: "35", class: "choice-4" },
+         { text: "Buccal fat removal", next: "35", class: "choice-4" },
+       ]
+     },
+
+
+     114: {
+       text: "Face:",
+       choices: [
+         { text: "Nose Job", next: "33", class: "choice-4" },
+         { text: "Face lift", next: "33", class: "choice-4" },
+         { text: "Eyes occidentalisation", next: "33", class: "choice-4" },
+         { text: "Buccal fat removal", next: "33", class: "choice-4" },
+       ]
+     },
+
+
+     115: {
+       text: "Torso:",
+       choices: [
+         { text: "Gastrectomy", next: "34", class: "choice-4" },
+         { text: "Ribs removal", next: "34", class: "choice-4" },
+         { text: "Breast augmentation", next: "34", class: "choice-4" },
+         { text: "Vertebroplasty", next: "34", class: "choice-4" },
+       ]
+     },
+     116: {
+       text: "Lower limb:",
+       choices: [
+         { text: "Gluteoplasty", next: "34", class: "choice-4" },
+         { text: "Histerectomy", next: "34", class: "choice-4" },
+         { text: "Ankle liposution", next: "34", class: "choice-4" },
+         { text: "Limb lenghtening", next: "34", class: "choice-4" },
+       ]
+     },
+
+
+     117: {
+       text: "Face:",
+       choices: [
+         { text: "Nose Job", next: "44", class: "choice-4" },
+         { text: "Face lift", next: "44", class: "choice-4" },
+         { text: "Eyes occidentalisation", next: "44", class: "choice-4" },
+         { text: "Buccal fat removal", next: "44", class: "choice-4" },
+       ]
+     },
+
+
+     118: {
+       text: "Torso:",
+       choices: [
+         { text: "Gastrectomy", next: "44", class: "choice-4" },
+         { text: "Ribs removal", next: "44", class: "choice-4" },
+         { text: "Breast augmentation", next: "44", class: "choice-4" },
+         { text: "Vertebroplasty", next: "44", class: "choice-4" },
+       ]
+     },
+     119: {
+       text: "Lower limb:",
+       choices: [
+         { text: "Gluteoplasty", next: "44", class: "choice-4" },
+         { text: "Histerectomy", next: "44", class: "choice-4" },
+         { text: "Ankle liposution", next: "44", class: "choice-4" },
+         { text: "Limb lenghtening", next: "44", class: "choice-4" },
+       ]
+     },
+
+
+
+
+
+
+     //vado alla fine
+     43: {
+       text: "Lower limb:",
+       choices: [
+         { text: "Gluteoplasty", next: "44", class: "choice-4" },
+         { text: "Histerectomy", next: "44", class: "choice-4" },
+         { text: "Ankle liposution", next: "44", class: "choice-4" },
+         { text: "Limb lenghtening", next: "44", class: "choice-4" },
+       ]
+     },
+
+
+
+
+     44: {
+       title: "YOU REACH a beauty score of 87.4%, never achieved before from a 10 y.o individual.",
+       continue: [{ text: "Continue", next: "45" }],
+       beauty:"87.4%"
+     },
+     45: {
+       title: "DR. ERIK IS REALLY PROUD OF YOUR ACHIEVEMENT./nHE SUGGESTS YOU TO START THINKING OF A WAY OF BECOMING A PUBLIC FIGURE./n NO ONE THIS BEAUTIFUL SHOULD REMAIN UNKNOWN. ",
+       continue: [{ text: "Continue", next: "46" }],
+     },
+     46: {
+       title: "you understand that this could be only the first step to become the Muse of Beauty propaganda. ",
+       continue: [{ text: "Continue", next: "47" }],
+     },
+
+
+
+
+
+
+     //scelta 2
+     25: {
+       text: "Decide where to run away",
+       choices: [
+         { text: "Downtown", next: "36", class: "choice-3" },
+         { text: "Low traffic street", next: "37", class: "choice-3" },
+         { text: "Towards the <br> hills", next: "38", class: "choice-3" }]
+     },
+
+
+     36: {
+       text: "You meet a really pretty girl down the street. Hunted by the sense of guilt you return home.",
+       video: "assets/36.png",
+       continue: [{ text: "Continue", next: "39" }],
+     },
+
+
+     37: {
+       text: "Too bad, doctor Erik finds you.",
+       video: "assets/37.mp4",
+       continue: [{ text: "Continue", next: "39" }],
+     },
+     38: {
+       text: "Your mother is following you with a car and finds you shortly after.",
+       video: "assets/38.mp4",
+       continue: [{ text: "Continue", next: "39" }],
+     },
+     39: {
+       title: "You understand that in this world, what your parents are doing to you is considered the greatest gesture of love.",
+       continue: [{ text: "Continue", next: "40" }],
+     },
+
+
+     40: {
+       title: "As a gift for coming home, you have 3 surgeries supplied:eyes occidentalisation, ribs removal, lower limb lenghtening",
+       continue: [{ text: "Continue", next: "47" }],
+       beauty:"87.4%"
+     },
+
+
+
+
+     //checkpoint 2
+     47: {
+       title: "YOU ARE NOW 15, YOU ARE OLD ENOUGH TO Enter in the entertainment INDUSTRY.",
+       continue: [{ text: "Continue", next: "48" }],
+     },
+
+
+     48: {
+       text: "You try the audition for a role in a play.",
+       video: "assets/48.mp4",
+       continue: [{ text: "Continue", next: "49" }],
+     },
+     49: {
+       text: "You have to decide for which role to audition.\n You obviously want to become the main star, but it’s your first experience and you don’t really know what do to.   ",
+       choices: [
+         { text: "Choice 1<br><br> You decide to audition for the major role", next: "50", class: "choice-2" },
+         { text: "Choice 2<br><br> You decide to audition for a minor role", next: "51", class: "choice-2" }]
+     },
+     //choice1
+     50: {
+       text: "The judges are captivated by your beauty. Despite this, you are a few grams above the ideal weight for the major role. ",
+       video: "assets/50.mp4",
+       continue: [{ text: "Continue", next: "52" }],
+     },
+     52: {
+       text: "What do you want to do?",
+       choices: [
+         { text: "You put yourself on a diet before second audition", next: "53", class: "choice-2" },
+         { text: "Nevertheless you show up at the second audition", next: "55", class: "choice-2" }]
+     },
+
+
+     //you put yourself
+     53: {
+       text: "You managed to reach your ideal weight, you are the protagonist of the play ",
+       video: "assets/53.mp4",
+       continue: [{ text: "Continue", next: "54" }],
+     },
+     54: {
+       text: "As you sign the contract you notice a girl in tears. Being the lead was her dream and she had studied so hard for the role, but her percentage wasn’t high enough.",
+       video: "assets/54.mp4",
+       continue: [{ text: "Continue", next: "59" }],
+     },
+     59: {
+       title: "You understand that everything is given to you only for your appearance. THIS WAS JUST THE FIRST OF MANY acclaimed ROLES OF YOUR CAREER.",
+       continue: [{ text: "Continue", next: "60" }],
+     },
+     60: {
+       title: "YOU will star in more than 100 plays and films, making your RISE TO THE STARDOM IN YOUR LATE TEENAGE YEARS EXPONENTIAL. you become ONE OF THE MOST SOUGHT AFTER PUBLIC PERSONALITIES.",
+       continue: [{ text: "Continue", next: "221" }],
+       beauty:"90.9%"
+     },
+     //Nevertheless you show up
+     55: {
+       title: "The judges don’t think it’s your time to shine yet. You try again and audtion for the minor role",
+       continue: [{ text: "Continue", next: "51" }],
+     },
+     51: {
+       text: "Congratulations! Your audition was a success and you were immediately taken. Although you forgot your lines the role was given to you right away.",
+       video: "assets/51.mp4",
+       continue: [{ text: "Continue", next: "56" }],
+     },
+
+
+     56: {
+       text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
+       choices: [
+         { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-2" },
+         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-2" }]
+     },
+     544: {
+       text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
+       choices: [
+         { text: "Start fake crying, you want to show him how innocent and pure you actually are", next: "57", class: "choice-2" },
+         { text: "Try to confront him. You are the most beautiful girl in the cast.You deserve the lead.", next: "58", class: "choice-2" }]
+     },
+
+
+     57: {
+       text: "He believes in you. You get the leading role.",
+       video: "assets/57.mp4",
+       continue: [{ text: "Continue", next: "54" }],
+     },
+
+
+     58: {
+       text: "The director doesn’t appreciate your behavior at all. He would have prefered if you had been more submissive. He suggests you undergo a bit more cosmetic surgery.",
+       choices: [
+         { text: "You get your face touched-up", next: "61", class: "choice-2" },
+         { text: "You get your waistline slimmed down", next: "61", class: "choice-2" }]
+     },
+
+
+     61: {
+       text: "You finally got the role.",
+       video: "assets/61.mp4",
+      continue: [{ text: "Continue", next: "54" }],
+     
+     },
+
+
+     //checkpoint3
+     221: {
+       title: "You are 25, and you REACH THE PEAK OF BEAUTY AND THE PEAK OF POWER AS WELL. yOU HAVE BECOME the muse of BEAUTY propaganda. YOU begin to feel more responsibilities SO YOU BEGIN to escape her reality with substance abuse.",
+      continue: [{ text: "Continue", next: "222" }],
+     },
+
+
+     222: {
+       text: "Your role now extends beyond show business; Surgeons, impressed by your results, ask you to give a public speech to remind the crowd of the world's principles. Build your speech.",
+      choices: [{ text: "Start your speech,<br> select the topic you’d like to discuss", next: "223", class: "choice-4"}],
+     },
+
+
+     223: {
+       choices: [
+         { text: "Occidentalism", next: "224", class: "choice-4" },
+         { text: "Eugenetics", next: "225", class: "choice-4" },
+         { text: "Able-bodied", next: "226", class: "choice-4" },
+         { text: "Whiteness", next: "227", class: "choice-4" },
+         { text: "Youth perseverance", next: "228", class: "choice-4" },
+         { text: "Beauty cult", next: "229", class: "choice-4" },
+         { text: "Aesthetic classism", next: "2210", class: "choice-4" },
+         { text: "Ugly repression", next: "2211", class: "choice-4" },
+         { text: "I'm done", next: "62", class: "choice-4" },]
+     },
+
+
+     224: {
+       text: "Beauty lies in our westernism. It is not just a way of life, but a divine manifestation of the superiority of our race. The physical characteristics of Westerners are a reflection of our genetic superiority. ",
+       video: "assets/224.mp4",
+       audio: "assets/audio/OCCIDENTALISM.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     225: {
+       text: "Embrace eugenics as our society's foundation. Shape a superior race by eliminating ugliness and inferiority. Perfect your appearance through surgeries and innovations if deemed ugly by society.",
+       video: "assets/225.mp4",
+       audio: "assets/audio/EUGENETICS.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     226: {
+       text: "Beauty is in strong, skilled bodies. Enhance agility and deny disability, the enemy of perfection. Eugenics must cure deformity and disability to legitimize everyone.",
+       video: "assets/226.mp4",
+       audio: "assets/audio/ABLE-BODIED.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     227: {
+       text: "Beauty is embodied in our whiteness. We are fortunate to be part of a society that celebrates the purity and innocence embodied by the pure color of our skin. It’ S the symbol of our dominance.",
+       video: "assets/227.mp4",
+        audio: "assets/audio/whitness.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     228: {
+       text: "We must resist aging and decay, maintaining our youth through surgery, cosmetic treatments, and other practices to preserve eternal beauty. Young people don't die.",
+       video: "assets/228.mp4",
+       audio: "assets/audio/YOUTH-PERSEVERANCE.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     229: {
+       text: "The beautiful are destined to reign and be celebrated. Ugliness leads to misery and contempt, showing a lack of value. Everyone must strive to become their most beautiful self. Beauty is our destiny.",
+       video: "assets/229.mp4",
+       audio: "assets/audio/BEAUTY-CULT.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     2210: {
+       text: "Science has shown that beautiful people are genetically superior, with strong morals and values, while the ugly are corrupt. Never corrupt your soul.",
+       video: "assets/2210.mp4",
+       audio: "assets/audio/AESTHETIC-CLASSISM.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     2211: {
+       text: "Rejecting ugliness is crucial for our nation. We must eliminate hideousness to preserve our aesthetics, taking drastic measures to maintain purity. Ugliness stains and blackens; it must be eradicated.",
+       video: "assets/2211.mp4",
+       audio: "assets/audio/ugly-repression.mp3" ,
+       continue: [{ text: "Continue", next: "223" }],
+     },
+
+
+     //checkpoint4
+     62: {
+       title: "Your speech was a huge success. Everyone is cheering for you.You reminded people the true values of society, reaffirming your status as an icon.",
+       continue: [{ text: "Continue", next: "63" }],
+       
+     },
+     63: {
+       text: "The surgeons are congratulating you but it has been a long day, and you feel tired. What do you want to do now?",
+       choices: [
+         { text: "<strong>Choice 1</strong> <br><br> You return to the dressing room. You need rest.", next: "64", class: "choice-2" },
+         { text: "<strong>Choice 2</strong> <br><br>Join the crowd, bask in their adoration, and show them true beauty.", next: "65", class: "choice-2" }]
+     },
+     //choice1
+     64: {
+       text: "Doctor Erik is waiting for you in the dressing room. He tells you that your schedule is too dense and you have no time to rest.He tells you that if you are too exhausted he can give you drugs. ",
+       choices: [
+         { text: "Accept", next: "65", class: "choice-2" },
+         { text: "Decline", next: "66", class: "choice-2" }]
+     },
+     //accept
+     65: {
+       text: "Since you look a little bit too hyped up, he offers you a glass of whiskey.",
+       choices: [
+         { text: "Accept", next: "67", class: "choice-2" },
+         { text: "Decline", next: "69", class: "choice-2" }]
+     },
+     //decline
+     66: {
+       text: "Dr. Erik sniffs a line of coke, and tells you that you can’t go out to the public like that anyways: you have dark circles under your eyes so he offers you a small botox injection.",
+       choices: [
+         { text: "Accept", next: "67", class: "choice-2" },
+         { text: "Decline", next: "67", class: "choice-2" }]
+     },
+
+
+     68: {
+       title: "Today you once again reached a huge success but you are feeling as empty as ever: none of your accomplishments are due to your skills or artistic caliber, every opportunity is given to you because of your appearance.Everything bores you, even the music you’re listening to right now. ",
+       continue: [{ text: "Continue", next: "70" }],
+     },
+
+
+     70: {
+       text: "While brushing your hair you see through the mirror a dark figure looking at you from outside the window. Startled, you turn around: it's Pyros.",
+       video: "assets/70.mp4",
+       continue: [{ text: "Continue", next: "71" }],
+     },
+
+
+     71: {
+       text: "Dr Erik warned you in the past about him.Once a surgeon, Pyros is now the leader of a reactionary movement against beauty system you stand for.",
+       video: "assets/76.mp4",
+       continue: [{ text: "Continue", next: "72" }],
+     },
+
+
+     72: {
+       text: "He breaks the glass, entering your mansion \n Quickly, he pulls out a knife and hurls it towards you. You have two choices.",
+       choices: [
+         { text: "You try to defend yourself.", next: "73", class: "choice-2" },
+         { text: "You stay still, weighed down by your ineptitude, hoping to feel something.", next: "74", class: "choice-2" }]
+     },
+     73: {
+       text: "You break your wrist and get superficially wounded on the legs. The security of the mansion quickly runs to you while Pyros escapes through the broken window.",
+       video: "assets/73.mp4",
+       continue: [{ text: "Continue", next: "75" }],
+     },
+     74: {
+       text: "Pyros cuts your face several times to ruin the most famous symbol of beauty.",
+       video: "assets/74.mp4",
+       continue: [{ text: "Continue", next: "75" }],
+     },
+     75: {
+       title: "Fortunately, the injuries sustained are treatable by Dr. Erik's eugenic practices. what is not curable is YOUR mental state, which leads you to distrust everybody.You feel lonelier than ever and you lean even more on dr erik’s presence and treatments. ",
+       continue: [{ text: "Continue", next: "82" }],
+       beauty:"95.6%"
+     },
+
+
+     69: {
+       title: "He forces you to: you can’t disrespect him like that. ",
+       continue: [{ text: "Continue", next: "67" }],
+     },
+     //choice2
+     655: {
+       text: "While walking through the adoring mass, you see a dark figure approaching. Startled, you step back: it's Pyros. Dr Erik warned you about him.",
+      video: "assets/65.mp4",
+       continue: [{ text: "Continue", next: "67" }],
+     },
+     67: {
+       text: "After all your duties, exhausted, you return to your villa. You take a glass of wine and you have a bath while listening to jazz music on vinyl. ",
+      video: "assets/67.mp4",
+       continue: [{ text: "Continue", next: "68" }],
+     },
+
+
+     76: {
+       text: "Once a surgeon, Pyros is now the leader of a reactionary movement against beauty. He has attempted to harm your beauty in the past, but to no avail. ",
+      video: "assets/76.mp4",
+       continue: [{ text: "Continue", next: "77" }],
+     },
+     77: {
+       text: "Quickly, he pulls out a knife and hurls it toward you. You have two choices.",
+       choices: [
+         { text: "You try to defend yourself.", next: "78", class: "choice-2" },
+         { text: "You stay still, weighed down by your ineptitude, hoping to feel something.", next: "79", class: "choice-2" }]
+     },
+     78: {
+       text: "You break your wrist and get superficially wounded on the legs. You try to avoid other hits.",
+       beauty:"83.4%",
+       choices: [
+         { text: "you quickly move to the right.", next: "80", class: "choice-2" },
+         { text: "You stay still, weighed down by your ineptitude, hoping to feel something.", next: "81", class: "choice-2" }]
+         
+     },
+
+
+     79: {
+       text: "Pyros cuts your face several times to ruin the most famous symbol of beauty. ",
+       video: "assets/79.mp4",
+       continue: [{ text: "Continue", next: "75" }],
+       beauty:"83.4%",
+     },
+
+
+     80: {
+       text: "You manage to avoid Pyros’ knives and the security team drags you away from the danger zone. You notice that your aggressor has disappeared in the crowd.",
+       video: "assets/80.mp4",
+       continue: [{ text: "Continue", next: "75" }],
+     },
+     81: {
+       text: "You are hit again on the arm but the security team drags you away from the danger zone. You notice that your aggressor has disappeared in the crowd.",
+       video: "assets/81.mp4",
+       continue: [{ text: "Continue", next: "75" }],
+     },
+
+
+     //checkpoint 5
+
+
+     82: {
+       title: "You understand that you are incapable of feeling anything. the only goal of your life is to pursue an ephemeral beauty, not for yourself, but for a society that expects this from you.",
+       continue: [{ text: "Continue", next: "83" }],
+     },
+
+
+     83: {
+       title: "You start planning of ending your own life but only after reaching the 100% beauty score.",
+       continue: [{ text: "Continue", next: "84" }],
+     },
+
+
+     84: {
+       text: "You go to Dr. Erik: you are ready for anything.",
+       choices: [
+         { text: "Choice 1 <br><br>The key to ultimate beauty is your face: ask him for facial surgery.", next: "85", class: "choice-2" },
+         { text: "Choice 2 <br><br>The key to ultimate beauty is height <br> ask him for femur elongation", next: "85", class: "choice-2" }]
+     },
+
+
+     85: {
+       title: "dr. Erik has some bad news for you: His knowledge is over, he has already performed on you every possible aesthetic enhancing surgery known.",
+       continue: [{ text: "Continue", next: "86" }],
+     },
+
+
+     86: {
+       text: "Dr. Erik proposes you the ultimate experiment: in a world where male beauty is valued more, the only choice you have is to implant the male organ.",
+      video: "assets/86.mp4",
+       continue: [{ text: "Continue", next: "87" }],
+     },
+
+
+     87: {
+       text: "You're thinking about it: it's an experiment that has never been done before. No one knows the consequences it could bring",
+       choices: [
+         { text: "<strong>Choice 1</strong><br> <br>You accept: it’s the only way you can achieve your goal.", next: "88", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br><br>  You refuse: you don’t really trust this solution.", next: "92", class: "choice-2" }],
+     },
+    
+     // choice 1
+     88: {
+       text: "It’s the first medical experiment of this kind. It worked perfectly. First time society has witnessed something like this. ",
+      video: "assets/88.mp4",
+       continue: [{ text: "Continue", next: "89" }],
+     },
+
+
+     89: {
+       title: "Everyone is in shock, you are not gender conforming anymore! You are suddenly an enemy for the beauty society: everyone who idolized you is now scared and ready to defend everything they believed in.",
+       continue: [{ text: "Continue", next: "90" }],
+     },
+
+
+     90: {
+       text: "The same society that venerated you until recently now sacrifices you. Stoning is a slow death: each stone diminishes your beauty, little by little, until you die.",
+       video: "assets/90.mp4",
+       continue: [{ text: "Continue", next: "91" }],
+       beauty:"00.0%"
+     },
+
+
+     // choice 2
+     92: {
+       title: "You realize that you are chasing something unachievable. Drained of your energies and will, you accept that you have nothing left: it is now time to abandon yourself to death.",
+       continue: [{ text: "Continue", next: "93" }],
+     },
+
+
+     93: {
+       text: "Dr Erik wants to preserve his most successful experiment so, without your consent, he puts you to sleep forever and embalms your beauty.",
+       video: "assets/93.mp4",
+       continue: [{ text: "Continue", next: "94" }],
+       beauty:"99.8%"
+     },
+
+
+     94: {
+       text: "You are now just a votive statue to be venerated, sacred symbol of the very idea of beauty.",
+       video: "94.mp4",
+       continue: [{ text: "Continue", next: "95" }],
+     },
+
+
+     // CHECKPOINT 5 END
+     91: {
+       title: "THE END",
+       continue: [{ text: "Continue", next: "95" }],
+     },
+
+
+     95: {
+       title: "Pretty privilege Refers to the privilege associated with beauty that originates from the aesthetic criteria defined by society and is based on the interconnection between outward appearance and social success. ",
+       continue: [{ text: "Continue", next: "96" }],
+     },
+
+
+     96: {
+       title: "This privilege allows those who benefit from it to be considered more intelligent, talented, sociable, and affable. As a result, an individual deemed attractive by conventional standards tends to gain more advantages.",
+       continue: [{ text: "Continue", next: "97" }],
+     },
+
+
+     97: {
+       title: "Nonetheless, it also presents a significant drawback: individuals considered attractive by conventional standards, particularly women, are frequently perceived as less competent.",
+       continue: [{ text: "Continue", next: "98" }],
+     },
+
+
+     98: {
+       title: "Beauty distorts our perception of people.",
+       continue: [{ text: "Continue", next: "99" }],
+     },
+
+
+     99: {
+       title: "Interactive transmedia narratives of new media \n LM Communication design \n  Politecnico di MIlano \n  Ilaria Mariani \n Mariana Ciancia \n Leonardo Codamo \n Ludovica Rossi" ,
+       continue: [{ text: "Continue", next: "9999" }],
+     },
+     9999: {
+       title: "Agostinelli Davide \n De Nicolo Anna Pasqua \nGaggi Marta \n Gnessi Giulia \n Leoni Veronica \n Monti Davide" ,
+       continue: [{ text: "Continue", next: "100" }],
+     },
+
+
+     100: {
+       title: "If you believe Selene’s story can have a different ending through different continue, relive it.",
+       continue: [{ text: "Continue", next: "start" }],
+     },
+    
+   }
+
+
+
+
+
+    const historyStack = [];
+
+
+function updateStory(step) {
+  const storyPart = gameData[step];
+  storyElement.innerHTML = "";
+  choicesElement.innerHTML = "";
+  buttonElement.innerHTML = "";
+
+  if (step === "1" && !backgroundAudio) 
+  { backgroundAudio = document.createElement("audio"); 
+  backgroundAudio.src = "assets/audio/Soundtrack.mp3"; 
+  backgroundAudio.loop = true;
+   backgroundAudio.autoplay = true; backgroundAudio.volume = 0.3; document.body.appendChild(backgroundAudio); }
+
+
+  if (!document.getElementById("backgroundAudio")) {
+const backgroundAudio = document.createElement("audio");
+backgroundAudio.id = "backgroundAudio";
+backgroundAudio.loop = true;
+backgroundAudio.autoplay = true;
+backgroundAudio.volume = 0.3; // Imposta il volume desiderato (da 0 a 1)
+document.body.appendChild(backgroundAudio);
+}
+
+
+  if (storyPart.title) {
+    const titleElement = document.createElement("p");
+    titleElement.classList.add("fade-in", "story-title");
+    titleElement.innerText = storyPart.title;
+    storyElement.appendChild(titleElement);
+    void titleElement.offsetWidth;
+    titleElement.classList.add("active");
+  }
+
+
+  if (storyPart.text) {
+    const textElement = document.createElement("p");
+    textElement.classList.add("fade-in", "story-text");
+    textElement.innerText = storyPart.text;
+    storyElement.appendChild(textElement);
+    void textElement.offsetWidth;
+    textElement.classList.add("active");
+  }
+
+
+  // Gestione dell'immagine statica
+  if (storyPart.image) {
+    const imageElement = document.createElement("img");
+    imageElement.src = storyPart.image;
+    imageElement.alt = "Story image";
+    imageElement.classList.add("fade-in", "story-image");
+    storyElement.appendChild(imageElement);
+    void imageElement.offsetWidth;
+    imageElement.classList.add("active");
+  }
+
+
+  // Gestione dell'immagine GIF
+  if (storyPart.gif) {
+    const videoElement = document.createElement("video");
+    videoElement.src = storyPart.gif;
+    videoElement.autoplay = true;
+    videoElement.loop = false; // Disabilita il loop per usare l'evento ended
+    videoElement.muted = true;
+    videoElement.classList.add("fade-in", "story-image-gif");
+    storyElement.appendChild(videoElement);
+    videoElement.playbackRate = 3;
+    void videoElement.offsetWidth;
+    videoElement.classList.add("active");
+
+
+    videoElement.addEventListener("ended", () => {
+      historyStack.push(step);
+      updateStory(storyPart.continue[0].next);
+    });
+  }
+
+
+  if (storyPart.video) {
+    const videoElement = document.createElement("video");
+    videoElement.src = storyPart.video;
+    videoElement.autoplay = true;
+    videoElement.loop = true; // Disabilita il loop per usare l'evento ended
+    videoElement.muted = true;
+    videoElement.classList.add("fade-in", "story-image");
+    storyElement.appendChild(videoElement);
+    void videoElement.offsetWidth;
+    videoElement.classList.add("active");
+  }
+
+
+  // Gestione dell'audio
+  if (storyPart.audio) {
+    const audioElement = document.createElement("audio");
+    audioElement.src = storyPart.audio;
+    audioElement.autoplay = true;
+    audioElement.controls = false;
+    storyElement.appendChild(audioElement);
+  }
+
+
+  if (storyPart.choices) {
+    storyPart.choices.forEach((choice) => {
+      const choiceElement = document.createElement("button");
+      choiceElement.innerHTML = choice.text;
+      choiceElement.classList.add("choice", "fade-in");
+      if (choice.class) {
+        choiceElement.classList.add(choice.class);
+      }
+      choiceElement.addEventListener("click", () => {
+        historyStack.push(step);
+        updateStory(choice.next);
+      });
+      choicesElement.appendChild(choiceElement);
+      void choiceElement.offsetWidth;
+      choiceElement.classList.add("active");
+    });
+  }
+  if (storyPart.beauty) {
+    const beautyValue = storyPart.beauty;
+
+  // Make a fetch request to send beautyValue to PHP
+  fetch('index.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ beauty: beautyValue }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Beauty value sent successfully to PHP', data);
+  })
+  .catch(error => {
+    console.error('Error sending beauty value to PHP:', error);
+  });
+  }
+
+  if (storyPart.continue) {
+    storyPart.continue.forEach((cont) => {
+      const continueButton = document.createElement("button");
+      continueButton.innerText = cont.text;
+      continueButton.classList.add("continueButton", "fade-in");
+      continueButton.addEventListener("click", () => {
+        historyStack.push(step);
+        updateStory(cont.next);
+      });
+
+
+      // Nascondi il bottone "Continua" per lo stato 9 e 11
+      if (step === "9" || step === "11") {
+        continueButton.style.display = "none";
+      }
+      buttonElement.appendChild(continueButton);
+      void continueButton.offsetWidth;
+      continueButton.classList.add("active");
+    });
+  }
+
+
+  // Mostra il tasto Indietro se c'è una storia precedente
+  backButton.style.display = historyStack.length ? "block" : "none";
+}
+
+
+backButton.addEventListener("click", () => {
+  if (historyStack.length) {
+    updateStory(historyStack.pop());
+  }
+});
+
+
+updateStory("start");
+</script>
+</body>
+</html>
+
+
