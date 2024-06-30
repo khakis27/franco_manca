@@ -136,7 +136,7 @@
         background-color: white;
         height: calc(100vh / 3);
         color: black;
-        padding: 10px;
+        padding: 20px;
         border: 2px solid black;
         cursor: pointer;
         display: block;
@@ -236,7 +236,7 @@
       const gameData = {
        start: {
          title:
-           "Quest for PP00 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\ Aesthetic Cleansing",
+           "Quest for PP00 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Aesthetic Cleansing",
          continue: [{ text: "Start", next: "1" }],
        },
        //background story
@@ -255,7 +255,7 @@
        continue: [{ text: "Continue", next: "4" }],
      },
      4: {
-       title: "Enter into a \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 different reality",
+       title: "Enter into a \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 different reality",
        continue: [{ text: "Continue", next: "5" }],
      },
      5: {
@@ -279,7 +279,7 @@
        continue: [{ text: "Continue", next: "10" }],
      },
      10: {
-       title: "Every aspect of the body undergoes meticulous scrutiny and is evaluated based on strict aesthetic parameters.Continuous evaluation by others determines an individual's overall beauty score, which impacts their social status.",
+       title: "Every aspect of the body undergoes meticulous scrutiny and is evaluated based on strict aesthetic parameters. Continuous evaluation by others determines an individual's overall beauty score, which impacts their social status.",
        continue: [{ text: "Continue", next: "11" }],
      },
      11: {
@@ -303,7 +303,7 @@
        continue: [{ text: "Continue", next: "16" }],
      },
      16: {
-       title: "You are \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Selene",
+       title: "You are \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 Selene",
        continue: [{ text: "Continue", next: "17" }],
      },      17: {
        text: "You were born into the highest caste of society.\n Your parents are extremely successful actors,\n at the top of the entertainment world.",
@@ -349,8 +349,8 @@
      24: {
        text: "Your parents decide to gift you a big surgery bundle, that will bring you to a 85% score, but you don’t know wether to accept or not.",
        choices: [
-         { text: "<strong>Choice 1</strong><br> You decide to accept the surgeries imposed by your parents.", next: "26", class: "choice-2" },
-         { text: "<strong>Choice 2</strong><br> You refuse all surgeries and try to run away from home.", next: "25", class: "choice-2" }]
+         { text: "<strong>Choice 1</strong><br><br> You decide to accept the surgeries imposed by your parents.", next: "26", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br><br> You refuse all surgeries and try to run away from home.", next: "25", class: "choice-2" }]
      },
      //scelta 1
      26: {
@@ -627,8 +627,8 @@
      49: {
        text: "You have to decide for which role to audition.\n You obviously want to become the main star, but it’s your first experience and you don’t really know what do to.   ",
        choices: [
-         { text: "Choice 1<br><br> You decide to audition for the major role", next: "50", class: "choice-2" },
-         { text: "Choice 2<br><br> You decide to audition for a minor role", next: "51", class: "choice-2" }]
+         { text: "<strong>Choice 1</strong><br> You decide to audition for the major role", next: "50", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br> You decide to audition for a minor role", next: "51", class: "choice-2" }]
      },
      //choice1
      50: {
@@ -667,7 +667,7 @@
      //Nevertheless you show up
      55: {
        title: "The judges don’t think it’s your time to shine yet. You try again and audtion for the minor role",
-       continue: [{ text: "Continue", next: "51" }],
+       continue: [{ text: "Continue", next: "5151" }],
      },
      51: {
        text: "Congratulations! Your audition was a success and you were immediately taken. Although you forgot your lines, the role was given to you right away.",
@@ -675,15 +675,29 @@
        continue: [{ text: "Continue", next: "56" }],
      },
 
+     5151: {
+       text: "Congratulations! Your audition was a success and you were immediately taken. Although you forgot your lines, the role was given to you right away.",
+       video: "assets/51.mp4",
+       continue: [{ text: "Continue", next: "5656" }],
+     },
+
+
+     5656: {
+       text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
+       choices: [
+         { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-2" },
+         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-non-clickable" }]
+     },
 
      56: {
        text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
        choices: [
          { text: "You follow Dr. Erik's advice and go to the director of the play.", next: "544", class: "choice-2" },
-         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-2" }]
+         { text: "You don't want special treatment. Do like everyone else and audition for the leading role.", next: "50", class: "choice-non" }]
      },
+     
      544: {
-       text: "You talk to Dr. Erik and he is very disappointed. A minor role isn’t enough, he advises you to go talk to your boss.",
+       text: "You are in front of the director of the play.\nWhat do you do?",
        choices: [
          { text: "Start fake crying, you want to show him how innocent and pure you actually are", next: "57", class: "choice-2" },
          { text: "Try to confront him. You are the most beautiful girl in the cast.You deserve the lead.", next: "58", class: "choice-2" }]
@@ -765,7 +779,7 @@
 
 
      227: {
-       text: "Beauty is embodied in our whiteness. We are fortunate to be part of a society that celebrates the purity and innocence embodied by the pure color of our skin. It’ S the symbol of our dominance.",
+       text: "Beauty is embodied in our whiteness. We are fortunate to be part of a society that celebrates the purity and innocence embodied by the pure color of our skin. It’ s the symbol of our dominance.",
        video: "assets/227.mp4",
         audio: "assets/audio/whitness.mp3" ,
        continue: [{ text: "Continue", next: "223" }],
@@ -813,8 +827,8 @@
      63: {
        text: "The surgeons are congratulating you but it has been a long day, and you feel tired. What do you want to do now?",
        choices: [
-         { text: "<strong>Choice 1</strong> <br><br> You return to the dressing room. You need rest.", next: "64", class: "choice-2" },
-         { text: "<strong>Choice 2</strong> <br><br>Join the crowd, bask in their adoration, and show them true beauty.", next: "65", class: "choice-2" }]
+         { text: "<strong>Choice 1</strong><br> You return to the dressing room. You need rest.", next: "64", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br>Join the crowd, bask in their adoration, and show them true beauty.", next: "65", class: "choice-2" }]
      },
      //choice1
      64: {
@@ -958,8 +972,8 @@
      84: {
        text: "You go to Dr. Erik: you are ready for anything.",
        choices: [
-         { text: "Choice 1 <br><br>The key to ultimate beauty is your face: ask him for facial surgery.", next: "85", class: "choice-2" },
-         { text: "Choice 2 <br><br>The key to ultimate beauty is height <br> ask him for femur elongation", next: "85", class: "choice-2" }]
+         { text: "Choice 1 <br>The key to ultimate beauty is your face: ask him for facial surgery.", next: "85", class: "choice-2" },
+         { text: "Choice 2 <br>The key to ultimate beauty is height <br> ask him for femur elongation", next: "85", class: "choice-2" }]
      },
 
 
@@ -979,13 +993,13 @@
      87: {
        text: "You're thinking about it: it's an experiment that has never been done before. No one knows the consequences it could bring.",
        choices: [
-         { text: "<strong>Choice 1</strong><br> <br>You accept: it’s the only way you can achieve your goal.", next: "88", class: "choice-2" },
-         { text: "<strong>Choice 2</strong><br><br>  You refuse: you don’t really trust this solution.", next: "92", class: "choice-2" }],
+         { text: "<strong>Choice 1</strong><br>You accept: it’s the only way you can achieve your goal.", next: "88", class: "choice-2" },
+         { text: "<strong>Choice 2</strong><br>You refuse: you don’t really trust this solution.", next: "92", class: "choice-2" }],
      },
     
      // choice 1
      88: {
-       text: "It’s the first medical experiment of this kind. It worked perfectly. First time society has witnessed something like this. ",
+       text: "It’s the first medical experiment of this kind.\n It worked perfectly. First time society has witnessed something like this. ",
       video: "assets/88.mp4",
        continue: [{ text: "Continue", next: "89" }],
      },
@@ -1007,7 +1021,7 @@
 
      // choice 2
      92: {
-       title: "You realize that you are chasing something unachievable. Drained of your energies and will, you accept that you have nothing left: it is now time to abandon yourself to death.",
+       title: "You realize that you are chasing something unachievable. Drained of your energies and will,\n you accept that you have nothing left: it is now time\n to abandon yourself to death.",
        continue: [{ text: "Continue", next: "93" }],
      },
 
@@ -1059,25 +1073,21 @@
 
 
      99: {
-       title: "Interactive transmedia narratives of new media \n LM Communication design \n  Politecnico di MIlano \n  Ilaria Mariani \n Mariana Ciancia \n Leonardo Codamo \n Ludovica Rossi" ,
+       title: "Quest for PP00 is a project developed by:\nD. Agostinelli, A.P. De Nicolo, M. Gaggi,\n G. Gnessi, V. Leoni, D.Monti." ,
        continue: [{ text: "Continue", next: "9999" }],
      },
      9999: {
-       title: "Agostinelli Davide \n De Nicolo Anna Pasqua \nGaggi Marta \n Gnessi Giulia \n Leoni Veronica \n Monti Davide" ,
+       title: "Politecnico di Milano a.s. 2023-24\n Lab. Complex Artifacts C3\n Prof. Mariani, Ciancia, Rossi, Codamo" ,
        continue: [{ text: "Continue", next: "100" }],
      },
 
 
      100: {
        title: "If you believe Selene’s story can have a different ending through different continue, relive it.",
-       continue: [{ text: "Continue", next: "start" }],
+       continue: [{ text: "Continue", next: "restart" }],
      },
     
    }
-
-
-
-
 
     const historyStack = [];
 
